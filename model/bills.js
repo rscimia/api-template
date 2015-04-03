@@ -1,9 +1,9 @@
 'use strict';
 
-var model = require('model');
+var model = require('./model.js');
 
 module.exports= {
-      data: mode.select('bills'),
+      data: model.select('bills'),
       formatError: function(bill) {
         if (bill === undefined)
           return 'Missing bill.';
