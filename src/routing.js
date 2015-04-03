@@ -7,7 +7,7 @@ var billModel = require('../model/bills.js'),
 module.exports = function(app) {
 
   // route to add a bill.
-  front.put('/bill', function(req, res) {
+  app.put('/bill', function(req, res) {
     var bill = req.body.bill;
 
     if (!(err = billModel.formatError(bill))) {
@@ -24,9 +24,9 @@ module.exports = function(app) {
   });
 
   // route to edit a bill.
-  front.post('/bill/:id', function(req, res) {
+  app.post('/bill/:id', function(req, res) {
     if (!(err = billModel.formatError(req.body.bill))) {
-      var bill = billModel.get({id: req.params.id});
+      var bill = billModel.data.get({id: req.params.id});
 
       if (!bill) {
         res.status(404);
@@ -34,7 +34,7 @@ module.exports = function(app) {
           error: 'Bill not found.'
         });
       }
-      billModel.select({id: req.params.id}).edit(req.body.bill);
+      billModel.data.select({id: req.params.id}).edit(req.body.bill);
       res.status(200)
       res.send(bill);
     }
@@ -47,8 +47,8 @@ module.exports = function(app) {
   });
 
   // route to get a bill.
-  front.post('/bill/:id', function(req, res) {
-    var bill = billModel.get({id: req.params.id});
+  app.get('/bill/:id', function(req, res) {
+    var bill = billModel.data.get({id: req.params.id});
 
     if (bill)
       res.send({ bill: bill });
