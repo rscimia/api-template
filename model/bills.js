@@ -14,8 +14,8 @@ module.exports= {
         if (typeof bill.seller !== 'string')
           return 'Invalid bill seller.';
 
-        if (typeof bill.ammout !== 'number')
-          return 'Invalid bill amout.';
+        if (typeof bill.amount !== 'number')
+          return 'Invalid bill amount.';
 
         return '';
       }
