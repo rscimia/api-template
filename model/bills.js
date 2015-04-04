@@ -28,6 +28,7 @@ module.exports = {
       return err;
 
     cursor.push(bill);
+    model.commit();
     return bill;
   },
   edit: function(id, bill) {
@@ -38,7 +39,7 @@ module.exports = {
       return err;
 
     // look for existancy
-    var billCursor = billModel.cursor.select({id: id});
+    var billCursor = cursor.select({id: id});
     if (!billCursor.get())
       return error(404, 'Bill not found.');
 
@@ -47,10 +48,11 @@ module.exports = {
 
     // updating data
     billCursor.edit(bill);
+    model.commit();
     return bill;
   },
   read: function(id) {
-    var billCursor = billModel.cursor.select({id: id});
+    var billCursor = cursor.select({id: id});
     if (!billCursor.get())
       return error(404, 'Bill not found.');
     else
