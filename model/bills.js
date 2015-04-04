@@ -1,23 +1,60 @@
 'use strict';
 
-var model = require('./model.js');
+var model = require('./model.js'),
+    cursor = model.select('bills'),
+    error = require('../utils/error.js');
 
 module.exports = {
-      data: model.select('bills'),
-      formatError: function(bill) {
-        if (bill === undefined)
-          return 'Missing bill.';
+  cursor: cursor,
+  formatError: function(bill) {
+    if (bill === undefined)
+      return error(400, 'Missing bill.');
 
-        if (typeof bill.id !== 'string')
-          return 'Invalid bill ID.';
+    if (typeof bill.id !== 'string')
+      return error(400, 'Invalid bill ID.');
 
-        if (typeof bill.seller !== 'string')
-          return 'Invalid bill seller.';
+    if (typeof bill.seller !== 'string')
+      return error(400, 'Invalid bill seller.');
 
-        if (typeof bill.amount !== 'number')
-          return 'Invalid bill amount.';
+    if (typeof bill.amount !== 'number')
+      return error(400, 'Invalid bill amount.');
 
-        return '';
-      }
-    };
+    return false;
+  },
+  add: function(bill) {
+    var err = false;
+
+    if (err = this.formatError(bill))
+      return err;
+
+    cursor.push(bill);
+    return bill;
+  },
+  edit: function(id, bill) {
+    var err = false;
+
+    // check bill format
+    if (err = this.formatError(bill))
+      return err;
+
+    // look for existancy
+    var billCursor = billModel.cursor.select({id: id});
+    if (!billCursor.get())
+      return error(404, 'Bill not found.');
+
+    // prevent id changing
+    bill.id = id;
+
+    // updating data
+    billCursor.edit(bill);
+    return bill;
+  },
+  read: function(id) {
+    var billCursor = billModel.cursor.select({id: id});
+    if (!billCursor.get())
+      return error(404, 'Bill not found.');
+    else
+      return billCursor.get();
+  }
+};
 

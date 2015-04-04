@@ -8,60 +8,46 @@ module.exports = function(app) {
 
   // route to add a bill.
   app.put('/bill', function(req, res) {
-    var bill = req.body.bill;
+    var bill = req.body.bill,
+        result = billModel.add(bill);
 
-    if (!(err = billModel.formatError(bill))) {
-      billModel.data.push(bill);
+    if (typeof result.send === 'function')
+      result.send(res);
+    else {
       res.status(201);
       res.send({
-        bill: bill
-      });
-    }
-    else {
-      res.status(400);
-      res.send({
-        error: err
+        bill: result
       });
     }
   });
 
   // route to edit a bill.
   app.post('/bill/:id', function(req, res) {
-    if (!(err = billModel.formatError(req.body.bill))) {
-      var bill = billModel.data.get({id: req.params.id});
+    var bill = req.body.bill,
+        id = req.params.id,
+        result = billModel.edit(id, bill);
 
-      if (!bill) {
-        res.status(404);
-        res.send({
-          error: 'Bill not found.'
-        });
-      }
-      billModel.data.select({id: req.params.id}).edit(req.body.bill);
+    if (typeof result.send === 'function')
+      result.send(res);
+    else {
       res.status(200);
       res.send({
-        bill: bill
-      });
-    }
-    else {
-      res.status(400);
-      res.send({
-        error: err
+        bill: result
       });
     }
   });
 
   // route to get a bill.
   app.get('/bill/:id', function(req, res) {
-    var bill = billModel.data.get({id: req.params.id});
+    var id = req.params.id,
+        result = billModel.read(id);
 
-    if (bill)
-      res.send({
-        bill: bill
-      });
+    if (typeof result.send === 'function')
+      result.send(res);
     else {
-      res.status(404);
+      res.status(200);
       res.send({
-        error: 'Bill not found.'
+        bill: result
       });
     }
   });
