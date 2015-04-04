@@ -13,7 +13,9 @@ module.exports = function(app) {
     if (!(err = billModel.formatError(bill))) {
       billModel.data.push(bill);
       res.status(201);
-      res.send(bill);
+      res.send({
+        bill: bill
+      });
     }
     else {
       res.status(400);
@@ -36,7 +38,9 @@ module.exports = function(app) {
       }
       billModel.data.select({id: req.params.id}).edit(req.body.bill);
       res.status(200)
-      res.send(bill);
+      res.send({
+        bill: bill
+      });
     }
     else {
       res.status(400);
@@ -51,7 +55,9 @@ module.exports = function(app) {
     var bill = billModel.data.get({id: req.params.id});
 
     if (bill)
-      res.send({ bill: bill });
+      res.send({
+        bill: bill
+      });
     else {
       res.status(404);
       res.send({
