@@ -2,7 +2,7 @@
 
 var model = require('./model.js');
 
-module.exports= {
+module.exports = {
       data: model.select('bills'),
       formatError: function(bill) {
         if (bill === undefined)

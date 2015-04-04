@@ -2,6 +2,7 @@
 
 var gulp = require('gulp'),
     mocha = require('gulp-mocha'),
+    gjslint = require('gulp-gjslint'),
     server = require('./server.js');
 
 gulp.task('start-test-server', function(done) {
@@ -19,4 +20,11 @@ gulp.task('test', ['start-test-server'], function(done) {
 });
 
 
+gulp.task('lint', function(done) {
+  return gulp.src(['./*.js', './src/*.js', './model/*.js'])
+    .pipe(gjslint({
+      flags: ['--nojsdoc']
+    }))
+    .pipe(gjslint.reporter('console'));
+});
 

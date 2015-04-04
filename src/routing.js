@@ -37,7 +37,7 @@ module.exports = function(app) {
         });
       }
       billModel.data.select({id: req.params.id}).edit(req.body.bill);
-      res.status(200)
+      res.status(200);
       res.send({
         bill: bill
       });
