@@ -110,7 +110,7 @@ describe('Bills tests', function() {
         });
   });
 
-   describe('POST:/bill/id',function(){
+  describe('POST:/bill/id',function(){
     it('should return a modified bill', function(done) {
           request(url).post('/bill/B01')
             .send({ bill: {
@@ -143,6 +143,18 @@ describe('Bills tests', function() {
               assert.equal(res.status, 404)
               assert.equal(err, null);
               assert.deepEqual(res.body.error, 'Bill not found.');
+              done();
+            });
+        });
+  });
+
+  describe('DELETE:/bill/id',function(){
+    it('should return ok for delete', function(done) {
+          request(url).delete('/bill/B01')
+            .send()
+            .end(function(err, res) {
+              assert.equal(res.status, 200)
+              assert.equal(err, null);
               done();
             });
         });

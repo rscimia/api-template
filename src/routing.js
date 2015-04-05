@@ -51,4 +51,17 @@ module.exports = function(app) {
       });
     }
   });
+
+  // route to delete a bill.
+  app.delete('/bill/:id', function(req, res) {
+    var id = req.params.id,
+        result = billModel.delete(id);
+
+    if (typeof result.send === 'function')
+      result.send(res);
+    else {
+      res.status(200);
+      res.send("ok");
+    }
+  });
 };

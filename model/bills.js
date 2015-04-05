@@ -57,6 +57,16 @@ module.exports = {
       return error(404, 'Bill not found.');
     else
       return billCursor.get();
-  }
+  },
+  delete: function(id){
+    var billCursor = cursor.select({id: id});
+    if (!billCursor.get())
+      return error(404, 'Bill not found.');
+    else{
+      billCursor.remove();
+      model.commit();
+      return 'ok';
+    }
+  }    
 };
 
