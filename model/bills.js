@@ -58,15 +58,15 @@ module.exports = {
     else
       return billCursor.get();
   },
-  delete: function(id){
+  delete: function(id) {
     var billCursor = cursor.select({id: id});
     if (!billCursor.get())
       return error(404, 'Bill not found.');
-    else{
+    else {
       billCursor.remove();
       model.commit();
       return 'ok';
     }
-  }    
+  }
 };
 

@@ -61,7 +61,9 @@ module.exports = function(app) {
       result.send(res);
     else {
       res.status(200);
-      res.send("ok");
+      res.send({
+        returned: result
+      });
     }
   });
 };
