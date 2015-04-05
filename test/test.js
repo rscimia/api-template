@@ -155,6 +155,7 @@ describe('Bills tests', function() {
             .end(function(err, res) {
               assert.equal(res.status, 200)
               assert.equal(err, null);
+              assert.deepEqual(res.body.returned, 'ok');
               done();
             });
         });
