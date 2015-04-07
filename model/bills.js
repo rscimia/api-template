@@ -2,7 +2,15 @@
 
 var model = require('./model.js'),
     cursor = model.select('bills'),
-    error = require('../utils/error.js');
+    error = require('../utils/error.js'),
+    callbacks = [];
+
+cursor.on('update', function() {
+  while (callbacks.length) {
+    var cb = callbacks.shift();
+    cb();
+  }
+});
 
 module.exports = {
   cursor: cursor,
@@ -21,51 +29,58 @@ module.exports = {
 
     return false;
   },
-  add: function(bill) {
+  add: function(data, cb) {
     var err = false;
 
-    if (err = this.formatError(bill))
-      return err;
-
-    cursor.push(bill);
-    model.commit();
-    return bill;
+    if (err = this.formatError(data.bill))
+      cb(err, null);
+    else {
+      cursor.push(data.bill);
+      callbacks.push(function() {
+        cb(null, data.bill);
+      });
+    }
   },
-  edit: function(id, bill) {
+  edit: function(data, cb) {
     var err = false;
 
     // check bill format
-    if (err = this.formatError(bill))
-      return err;
+    if (err = this.formatError(data.bill))
+      cb(err, null);
+    else {
+      // look for existancy
+      var billCursor = cursor.select({id: data.id});
+      if (!billCursor.get())
+        cb(error(404, 'Bill not found.'), null);
+      else {
+        // prevent id changing
+        data.bill.id = data.id;
 
-    // look for existancy
-    var billCursor = cursor.select({id: id});
-    if (!billCursor.get())
-      return error(404, 'Bill not found.');
+        // updating data
+        billCursor.edit(data.bill);
 
-    // prevent id changing
-    bill.id = id;
-
-    // updating data
-    billCursor.edit(bill);
-    model.commit();
-    return bill;
+        callbacks.push(function() {
+          cb(null, data.bill);
+        });
+      }
+    }
   },
-  read: function(id) {
-    var billCursor = cursor.select({id: id});
+  read: function(data, cb) {
+    var billCursor = cursor.select({id: data.id});
     if (!billCursor.get())
-      return error(404, 'Bill not found.');
+      cb(error(404, 'Bill not found.'), null);
     else
-      return billCursor.get();
+      cb(null, billCursor.get());
   },
-  delete: function(id) {
-    var billCursor = cursor.select({id: id});
+  delete: function(data, cb) {
+    var billCursor = cursor.select({id: data.id});
     if (!billCursor.get())
-      return error(404, 'Bill not found.');
+      cb(error(404, 'Bill not found.'), null);
     else {
       billCursor.remove();
-      model.commit();
-      return 'ok';
+      callbacks.push(function() {
+        cb(null, 'ok');
+      });
     }
   }
 };
