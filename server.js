@@ -41,12 +41,14 @@ server.start = function() {
   console.log('Started server :', config.host, config.port.toString());
 
   // Prevent from server rage quit on exception.
-  connection.on('error', function(err) {
-    log.error(err.code, err.message, err.details, err.context);
-  });
-  process.on('uncaughtException', function(err) {
-    log.error(err.code, err.message, err.details, err.context);
-  });
+  if (config.preventException) {
+    connection.on('error', function(err) {
+      console.error(err.code, err.message);
+    });
+    process.on('uncaughtException', function(err) {
+      console.error(err.code, err.message);
+    });
+  }
 
   status = 'started';
 };
