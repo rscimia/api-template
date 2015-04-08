@@ -26,7 +26,7 @@ server.init = function() {
   app.use(bodyParser.json());
 
   // routes definitions.
-  require('./src/routing.js')(app);
+  require('./utils/routing.js')(app);
 
   status = 'initialized';
 };

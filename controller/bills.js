@@ -1,13 +1,12 @@
 'use strict';
 
 var billModel = require('../model/bills.js'),
+    billController = {};
 
-    err = null;
-
-module.exports = function(app) {
-
-  // route to add a bill.
-  app.put('/bill', function(req, res) {
+billController.create = {
+  route: '/bill',
+  method: 'put',
+  action: function(req, res) {
     billModel.add({
       bill: req.body.bill
     },
@@ -21,10 +20,13 @@ module.exports = function(app) {
         });
       }
     });
-  });
+  }
+};
 
-  // route to edit a bill.
-  app.post('/bill/:id', function(req, res) {
+billController.update = {
+  route: '/bill/:id',
+  method: 'post',
+  action: function(req, res) {
     billModel.edit({
       id: req.params.id,
       bill: req.body.bill
@@ -39,10 +41,13 @@ module.exports = function(app) {
         });
       }
     });
-  });
+  }
+};
 
-  // route to get a bill.
-  app.get('/bill/:id', function(req, res) {
+billController.read = {
+  route: '/bill/:id',
+  method: 'get',
+  action: function(req, res) {
     billModel.read({
       id: req.params.id
     },
@@ -57,10 +62,13 @@ module.exports = function(app) {
         });
       }
     });
-  });
+  }
+};
 
-  // route to delete a bill.
-  app.delete('/bill/:id', function(req, res) {
+billController.delete = {
+  route: '/bill/:id',
+  method: 'delete',
+  action: function(req, res) {
     billModel.delete({
       id: req.params.id
     },
@@ -74,5 +82,7 @@ module.exports = function(app) {
         });
       }
     });
-  });
+  }
 };
+
+module.exports = billController;
