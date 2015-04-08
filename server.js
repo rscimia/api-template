@@ -29,6 +29,29 @@ server.init = function() {
   require('./utils/routing.js')(app);
 
   status = 'initialized';
+  return server;
+};
+
+server.settings = function(a1, a2) {
+  if (a1 === undefined && a2 === undefined) {
+    // copy config object to avoid reference
+    return Object.keys(config).reduce(function(c, k) {
+      c[k] = config[k];
+      return c;
+    }, {});
+  }
+  else if (typeof a1 === 'string' && a2 === undefined)
+    return config[a1];
+  else if (typeof a1 === 'object' && a2 === undefined) {
+    Object.keys(a1).forEach(function(k) {
+      if (typeof config[k] === typeof a1[k])
+        config[k] = a1[k];
+    });
+  }
+  else if (typeof a1 === 'string' && typeof config[a1] === typeof a2)
+    config[a1] = a2;
+
+  return server;
 };
 
 server.start = function() {
@@ -51,6 +74,7 @@ server.start = function() {
   }
 
   status = 'started';
+  return server;
 };
 
 server.stop = function() {
@@ -58,7 +82,12 @@ server.stop = function() {
   console.log('Stopped server :', config.host, config.port.toString());
 
   status = 'stopped';
+  return server;
 };
 
+server.restart = function() {
+  this.stop();
+  this.start();
+}
 
 module.exports = server;

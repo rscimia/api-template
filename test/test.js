@@ -3,8 +3,53 @@
 var request = require('supertest'),
     assert = require('assert'),
 
+    server = require('../server.js'),
     config = require('../config/config.json'),
-    url = config.host + ':' + config.port;
+
+    // copy config to restore after tests.
+    initialConfig = Object.keys(config).reduce(function(c, k) {
+      c[k] = config[k];
+      return c;
+    }, {}),
+
+    newConfig = {
+      host: 'localhost',
+      port: 3001,
+      preventException: false
+    },
+    url = initialConfig.host + ':' + initialConfig.port;
+
+describe('Server tests', function() {
+  describe('server.settings', function() {
+
+    it('should return configuration', function() {
+      assert.deepEqual(server.settings(), initialConfig);
+    });
+
+    it('should return configurated port', function() {
+      assert.deepEqual(server.settings('port'), initialConfig.port);
+    });
+
+    it('should set a new port', function() {
+      assert.deepEqual(
+        server.settings('port', newConfig.port).settings('port'),
+        newConfig.port
+        );
+    });
+
+    it('should set a new configuration', function() {
+      assert.deepEqual(
+        server.settings(newConfig).settings(),
+        newConfig
+        );
+    });
+
+    // restore initial settings
+    after(function() {
+      server.settings(initialConfig);
+    })
+  });
+});
 
 describe('Bills tests', function() {
 
