@@ -6,7 +6,7 @@ var fs = require('fs'),
     bodyParser = require('body-parser'),
 
     server = {},
-    config = null,
+    config = require('./config/config.json'),
     app = null,
     connection = null,
     status = null;
@@ -15,9 +15,6 @@ server.init = function() {
   // Avoid initializing twice.
   if (status !== null)
     return;
-
-  // Loading configuration.
-  config = require('./config/config.json');
 
   // creating express server.
   app = express();

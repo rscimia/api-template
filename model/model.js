@@ -1,12 +1,12 @@
 'use strict';
 var  server = require('../server.js'),
       fs = require('fs'),
-      dataFilePath = server.settings('dataFile'),
+      dataFilePath = '../' + server.settings('dataFile'),
     // data default format
     dataTemplate = {
         bills: []
     },
-    
+
     // initialize data object.
     data = {};
 
@@ -18,7 +18,7 @@ try {
 }
 catch(e) {
     // in that case, data equal {}.
-  console.warn('Unable to load data from ', dataFilePath);
+  console.warn(e, 'Unable to load data from ', dataFilePath);
 }
 
 // merging loaded data to the template
@@ -61,9 +61,9 @@ function mergeData(data, template) {
         }
         else                                  // else
             mergedData[key] = template[key];// take data from dataTemple
-        
+
         return mergedData;                    // return mergedData
-    }, {}); 
+    }, {});
 }
 
 data = mergeData(data, dataTemplate);
@@ -74,7 +74,7 @@ data = mergeData(data, dataTemplate);
 
 // using merged data to create tree
 var model = new (require('baobab'))(data);
-
+/*
 model.on('update', function() {
       try{
        var stringData = JSON.stringify(model);
@@ -87,7 +87,7 @@ model.on('update', function() {
 
     }catch(e) {
       console.warn('An error occured during persistencing.',e);
-    } 
-});
+    }
+});*/
 
 module.exports = model;

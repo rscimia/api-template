@@ -3,11 +3,26 @@
 var gulp = require('gulp'),
     mocha = require('gulp-mocha'),
     gjslint = require('gulp-gjslint'),
-    server = require('./server.js');
+    server = require('./server.js'),
+    fs = require('fs');
 
-gulp.task('start-test-server', function(done) {
+gulp.task('override-test-data', function(done) {
+  fs.writeFile(
+    './test/data.json',
+    JSON.stringify({
+      bills:[{
+          id: 'alreadyThereBill',
+          seller: 'test seller',
+          amount: 50
+        }]
+    }),
+    function(err) {
+      done();
+    });
+});
+
+gulp.task('start-test-server', ['override-test-data'], function(done) {
   server
-    .init()
     .settings(require('./config/config-test.json'))
     .settings('dataFile', 'test/data.json')
     .start();

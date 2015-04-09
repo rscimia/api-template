@@ -4,6 +4,7 @@ var request = require('supertest'),
     assert = require('assert'),
 
     server = require('../server.js'),
+    model = require('../model/model.js'),
     config = server.settings(),
 
     // copy config to restore after tests.
@@ -19,6 +20,19 @@ var request = require('supertest'),
       dataFile: "model/test.json"
     },
     url = initialConfig.host + ':' + initialConfig.port;
+
+describe('Model tests', function() {
+  it('should have loaded data from test/data.json', function(done) {
+    assert.deepEqual(model.get(), {
+      bills:[{
+          id: 'alreadyThereBill',
+          seller: 'test seller',
+          amount: 50
+        }]
+    });
+    done();
+  });
+});
 
 describe('Server tests', function() {
   describe('server.settings', function() {
@@ -53,7 +67,6 @@ describe('Server tests', function() {
 });
 
 describe('Bills tests', function() {
-
   describe('PUT:/bill', function() {
 
     it('should fail : invalid id', function(done) {
