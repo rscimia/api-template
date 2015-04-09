@@ -26,7 +26,17 @@ Edit configuration file to match your needs :
 Tests
 ===
 
-Run `npm test`
+Copy config.sample file :
+
+`cp config/config.sample config/config-test.json`
+
+Edit test configuration file to match your needs :
+
+`editor config/config-test.json`
+
+Run :
+
+`npm test`
 
 Start
 ===

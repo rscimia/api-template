@@ -4,7 +4,7 @@ var request = require('supertest'),
     assert = require('assert'),
 
     server = require('../server.js'),
-    config = require('../config/config.json'),
+    config = server.settings(),
 
     // copy config to restore after tests.
     initialConfig = Object.keys(config).reduce(function(c, k) {
@@ -16,11 +16,7 @@ var request = require('supertest'),
       host: 'localhost',
       port: 3001,
       preventException: false,
-      dataFile: "model/test.json",
-      test_host: "localhost",
-      test_port: 3000,
-      test_preventException: false,
-      test_dataFile: "model/test.json"
+      dataFile: "model/test.json"
     },
     url = initialConfig.host + ':' + initialConfig.port;
 
@@ -216,6 +212,6 @@ describe('DELETE:/bill/id',function(){
               done();
             });
         });
-});  
+});
 
 });

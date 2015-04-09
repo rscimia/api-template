@@ -6,8 +6,11 @@ var gulp = require('gulp'),
     server = require('./server.js');
 
 gulp.task('start-test-server', function(done) {
-  server.start();
-  server.loadTestConfig();
+  server
+    .init()
+    .settings(require('./config/config-test.json'))
+    .settings('dataFile', 'test/data.json')
+    .start();
   done();
 });
 
