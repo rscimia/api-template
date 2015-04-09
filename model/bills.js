@@ -28,8 +28,6 @@ cursor.on('update', function() {
 });
 
 
-
-
 module.exports = {
   cursor: cursor,
   /**
@@ -124,7 +122,7 @@ module.exports = {
     var billCursor = cursor.select({id: data.id}),
         bill = billCursor.get();
 
-    if (!billCursor.get())
+    if (!bill)
       cb(error(404, 'Bill not found.'), null);
     else {
       billCursor.remove();
