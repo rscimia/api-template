@@ -45,7 +45,7 @@ module.exports = {
     if (typeof product.quantity !== 'number')
       return error(400, 'Invalid product quantity.');
 
-    if (typeof product.price !== 'float')
+    if (typeof product.price !== 'number')
       return error(400, 'Invalid product price.');
 
     return false;

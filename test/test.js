@@ -23,13 +23,11 @@ var request = require('supertest'),
 
 describe('Model tests', function() {
   it('should have loaded data from test/data.json', function(done) {
-    assert.deepEqual(model.get(), {
-      bills:[{
+    assert.deepEqual(model.get('bills'), [{
           id: 'alreadyThereBill',
           seller: 'test seller',
           amount: 50
-        }]
-    });
+    }]);
     done();
   });
 });
@@ -220,6 +218,169 @@ describe('DELETE:/bill/id',function(){
                   id: 'B01',
                   seller: 'Computer Inc.',
                   amount: 600.50
+                }
+              );
+              done();
+            });
+        });
+});
+
+});
+
+describe('Products tests', function() {
+  describe('PUT:/product', function() {
+
+    it('should fail : invalid id', function(done) {
+      request(url).put('/product')
+        .send({ product: {
+          quantity: 2 ,
+          price: 30.5
+        }})
+        .end(function(err, res) {
+          assert.equal(res.status, 400)
+          assert.equal(err, null);
+          assert.deepEqual(res.body.error, 'Invalid product ID.');
+
+          done();
+        });
+    });
+
+    it('should fail : invalid quantity', function(done) {
+      request(url).put('/product')
+        .send({ product: {
+          id: 'P01',
+          price: 30.5
+        }})
+        .end(function(err, res) {
+          assert.equal(res.status, 400)
+          assert.equal(err, null);
+          assert.deepEqual(res.body.error, 'Invalid product quantity.');
+
+          done();
+        });
+    });
+
+    it('should fail : invalid price', function(done) {
+      request(url).put('/product')
+        .send({ product: {
+          id: 'P01',
+          quantity: 2
+        }})
+        .end(function(err, res) {
+          assert.equal(res.status, 400)
+          assert.equal(err, null);
+          assert.deepEqual(res.body.error, 'Invalid product price.');
+
+          done();
+        });
+    });
+
+    it('should create new product', function(done) {
+      request(url).put('/product')
+        .send({ product: {
+          id: 'P01',
+          quantity: 2,
+          price: 30.5
+        }})
+        .end(function(err, res) {
+          assert.equal(res.status, 201)
+          assert.equal(err, null);
+          assert.deepEqual(
+            res.body.product,
+            {
+              id: 'P01',
+              quantity: 2,
+              price: 30.5
+            }
+          );
+
+          done();
+        });
+    });
+
+  });
+
+  describe('GET:/product/id',function(){
+    it('should fail : invalid id', function(done) {
+          request(url).get('/product/P02')
+            .send()
+            .end(function(err, res) {
+              assert.equal(res.status, 404)
+              assert.equal(err, null);
+              assert.deepEqual(res.body.error, 'product not found.');
+              done();
+            });
+        });
+    it('should return a product', function(done) {
+          request(url).get('/product/P01')
+            .send()
+            .end(function(err, res) {
+              assert.equal(res.status, 200)
+              assert.equal(err, null);
+               assert.deepEqual(
+              res.body.product,
+              {
+                id: 'P01',
+                quantity: 2,
+                price: 30.5
+              }
+            );
+              done();
+            });
+        });
+  });
+
+  describe('POST:/product/id',function(){
+    it('should return a modified product', function(done) {
+          request(url).post('/product/P01')
+            .send({ product: {
+                  id: 'P01',
+                  quantity: 5,
+                  price: 30.5
+                }})
+            .end(function(err, res) {
+              assert.equal(res.status, 200)
+              assert.equal(err, null);
+              assert.deepEqual(
+              res.body.product,
+                {
+                  id: 'P01',
+                  quantity: 5,
+                  price: 30.5
+                }
+              );
+              done();
+            });
+        });
+     it('should fail : invalid id', function(done) {
+          request(url).post('/product/P02')
+            .send({ product: {
+                id: 'P01',
+                quantity: 5,
+                price: 30.5
+                }})
+            .end(function(err, res) {
+              assert.equal(res.status, 404)
+              assert.equal(err, null);
+              assert.deepEqual(res.body.error, 'product not found.');
+              done();
+            });
+        });
+  });
+
+describe('DELETE:/product/id',function(){
+    it('should return a deleted product', function(done) {
+          request(url).delete('/product/P01')
+            .send()
+            .end(function(err, res) {
+              assert.equal(res.status, 200)
+              assert.equal(err, null);
+              assert.deepEqual(
+              res.body.product,
+                {
+                  id: 'P01',
+                  quantity: 5,
+                  price: 30.5
                 }
               );
               done();
