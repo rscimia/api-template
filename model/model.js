@@ -4,7 +4,8 @@ var  server = require('../server.js'),
       dataFilePath = '../' + server.settings('dataFile'),
     // data default format
     dataTemplate = {
-        bills: []
+        bills: [],
+        products: []
     },
 
     // initialize data object.
