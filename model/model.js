@@ -75,26 +75,8 @@ data = mergeData(data, dataTemplate);
 // using merged data to create tree
 var model = new (require('baobab'))(data);
 
-function saveData() {
-  try{
-     stringData = JSON.stringify(data);
-     fs.writeFileSync(dataFilePath,stringData,function(err){
-        if (err) {
-          console.log('Error during writeFile',err);
-        } else
-          console.log('DATA saved.')
-     });
-
-  }catch(e) {
-    console.warn('An error occured during persistencing.');
-  }
-}
-
-
-module.exports = {
-  model: model,
-  saveData: function(){
-    try{
+model.on('update', function() {
+      try{
        var stringData = JSON.stringify(model);
        fs.writeFile(dataFilePath,stringData,function(err){
           if (err) {
@@ -105,6 +87,7 @@ module.exports = {
 
     }catch(e) {
       console.warn('An error occured during persistencing.',e);
-    }     
-  }
-};
+    } 
+});
+
+module.exports = model;

@@ -1,7 +1,7 @@
 'use strict';
 
-var modelClass = require('./model.js'),
-    cursor = modelClass.model.select('bills'),
+var model = require('./model.js'),
+    cursor = model.select('bills'),
     error = require('../utils/error.js'),
     callbacks = [];
 
@@ -24,7 +24,6 @@ cursor.on('update', function() {
   while (callbacks.length) {
     var cb = callbacks.shift();
     cb();
-    modelClass.saveData();
   }
 });
 
