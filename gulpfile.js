@@ -7,6 +7,7 @@ var gulp = require('gulp'),
 
 gulp.task('start-test-server', function(done) {
   server.start();
+  server.loadTestConfig();
   done();
 });
 
@@ -27,4 +28,3 @@ gulp.task('lint', function(done) {
     }))
     .pipe(gjslint.reporter('console'));
 });
-

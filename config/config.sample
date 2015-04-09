@@ -1,5 +1,10 @@
 {
   "host": "localhost",
   "port": 3000,
-  "preventException": true
+  "preventException": false,
+  "dataFile": "model/test.json",
+  "test_host": "localhost",
+  "test_port": 3000,
+  "test_preventException": false,
+  "test_dataFile": "model/test.json"
 }

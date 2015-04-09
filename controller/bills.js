@@ -78,7 +78,7 @@ billController.delete = {
       else{
         res.status(200);
         res.send({
-          returned: data
+          bill: data
         });
       }
     });

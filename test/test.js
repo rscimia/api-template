@@ -15,7 +15,12 @@ var request = require('supertest'),
     newConfig = {
       host: 'localhost',
       port: 3001,
-      preventException: false
+      preventException: false,
+      dataFile: "model/test.json",
+      test_host: "localhost",
+      test_port: 3000,
+      test_preventException: false,
+      test_dataFile: "model/test.json"
     },
     url = initialConfig.host + ':' + initialConfig.port;
 
@@ -193,17 +198,24 @@ describe('Bills tests', function() {
         });
   });
 
-  describe('DELETE:/bill/id',function(){
-    it('should return ok for delete', function(done) {
+describe('DELETE:/bill/id',function(){
+    it('should return a deleted bill', function(done) {
           request(url).delete('/bill/B01')
             .send()
             .end(function(err, res) {
               assert.equal(res.status, 200)
               assert.equal(err, null);
-              assert.deepEqual(res.body.returned, 'ok');
+              assert.deepEqual(
+              res.body.bill,
+                {
+                  id: 'B01',
+                  seller: 'Computer Inc.',
+                  amount: 600.50
+                }
+              );
               done();
             });
         });
-  });
+});  
 
 });

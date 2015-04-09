@@ -54,6 +54,11 @@ server.settings = function(a1, a2) {
   return server;
 };
 
+server.loadTestConfig = function(){
+  server.settings('host',server.settings('test_host'));
+  server.settings('port',server.settings('test_port'));
+  server.settings('dataFile',server.settings('test_dataFile'));
+};
 server.start = function() {
   // Do not start without configuration and routing.
   if (!(status === 'initialized' || status === 'stopped'))
@@ -62,6 +67,7 @@ server.start = function() {
   // Starting to listen.
   connection = app.listen(config.port);
   console.log('Started server :', config.host, config.port.toString());
+
 
   // Prevent from server rage quit on exception.
   if (config.preventException) {
