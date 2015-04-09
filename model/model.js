@@ -22,34 +22,6 @@ catch(e) {
 }
 
 // merging loaded data to the template
-// should be a recursive function to be very effective
-// it should also merge arrays and objects recursively.
-
-// Object.keys exemple
-// Object.keys({
-//   toto: true,
-//   tata: 'test',
-//   tutu: 50
-// });
-// > ['toto', 'tata', 'tutu']
-
-// Array.prototype.reduce exemple
-// ['toto', 'tata', 'tutu'].reduce(function(previous, arrayCell, index) {
-//   previous[arrayCell] = index;
-//   return previous;
-// }, {});
-// > {
-// >   toto: 0,
-// >   tata: 1,
-// >   tutu: 2
-// > }
-
-
-// ['toto', 'tata', 'tutu'].map(function(item) {
-//   return item.reverse();
-// });
-// > ['otot', 'atat', 'utut']
-
 function mergeData(data, template) {
   return Object.keys(template)     // get all dataTemplate keys.
     .reduce(function(mergedData, key) {     // for each dataTemplate key
@@ -74,20 +46,5 @@ data = mergeData(data, dataTemplate);
 
 // using merged data to create tree
 var model = new (require('baobab'))(data);
-/*
-model.on('update', function() {
-      try{
-       var stringData = JSON.stringify(model);
-       fs.writeFile(dataFilePath,stringData,function(err){
-          if (err) {
-            console.log('Error during writeFile',err);
-          } else
-            console.log('DATA saved.')
-       });
-
-    }catch(e) {
-      console.warn('An error occured during persistencing.',e);
-    }
-});*/
 
 module.exports = model;
