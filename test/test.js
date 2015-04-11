@@ -2,6 +2,7 @@
 
 var request = require('supertest'),
     assert = require('assert'),
+    uuidSeller,
 
     server = require('../server.js'),
     model = require('../model/model.js'),
@@ -116,7 +117,6 @@ describe('Bills tests', function() {
     it('should create new seller', function(done) {
       request(url).put('/seller')
         .send({ seller: {
-          id: 'S01',
           name: 'Nick',
           adress: '1 camden road',
           mail: 'nick@gmail.com',
@@ -125,17 +125,17 @@ describe('Bills tests', function() {
         .end(function(err, res) {
           assert.equal(res.status, 201)
           assert.equal(err, null);
+          uuidSeller = res.body.seller.id;
           assert.deepEqual(
             res.body.seller,
             {
-              id: 'S01',
+              id: uuidSeller,
               name: 'Nick',
               adress: '1 camden road',
               mail: 'nick@gmail.com',
               phone: 0295652525
             }
           );
-
           done();
         });
     });
@@ -144,7 +144,7 @@ describe('Bills tests', function() {
       request(url).put('/bill')
         .send({ bill: {
           id: 'B01',
-          seller: 'S01'
+          seller: uuidSeller
         }})
         .end(function(err, res) {
           assert.equal(res.status, 400)
@@ -159,7 +159,7 @@ describe('Bills tests', function() {
       request(url).put('/bill')
         .send({ bill: {
           id: 'B01',
-          seller: 'S01',
+          seller: uuidSeller,
           amount: 524.95
         }})
         .end(function(err, res) {
@@ -169,7 +169,7 @@ describe('Bills tests', function() {
             res.body.bill,
             {
               id: 'B01',
-              seller: 'S01',
+              seller: uuidSeller,
               amount: 524.95
             }
           );
@@ -201,7 +201,7 @@ describe('Bills tests', function() {
               res.body.bill,
               {
                 id: 'B01',
-                seller: 'S01',
+                seller: uuidSeller,
                 amount: 524.95
               }
             );
@@ -215,7 +215,7 @@ describe('Bills tests', function() {
           request(url).post('/bill/B01')
             .send({ bill: {
                   id: 'B01',
-                  seller: 'S01',
+                  seller: uuidSeller,
                   amount: 600.50
                 }})
             .end(function(err, res) {
@@ -225,7 +225,7 @@ describe('Bills tests', function() {
               res.body.bill,
                 {
                   id: 'B01',
-                  seller: 'S01',
+                  seller: uuidSeller,
                   amount: 600.50
                 }
               );
@@ -236,7 +236,7 @@ describe('Bills tests', function() {
           request(url).post('/bill/B02')
             .send({ bill: {
                   id: 'B01',
-                  seller: 'S01',
+                  seller: uuidSeller,
                   amount: 600.50
                 }})
             .end(function(err, res) {
@@ -259,7 +259,7 @@ describe('DELETE:/bill/id',function(){
               res.body.bill,
                 {
                   id: 'B01',
-                  seller: 'S01',
+                  seller: uuidSeller,
                   amount: 600.50
                 }
               );
@@ -437,27 +437,9 @@ describe('Sellers tests', function() {
 
   describe('PUT:/seller', function() {
 
-    it('should fail : invalid id', function(done) {
-      request(url).put('/seller')
-        .send({ seller: {
-          name: 'Nick',
-          adress: '1 camden road',
-          mail: 'nick@gmail.com',
-          phone: 0295652525
-        }})
-        .end(function(err, res) {
-          assert.equal(res.status, 400)
-          assert.equal(err, null);
-          assert.deepEqual(res.body.error, 'Invalid seller ID.');
-
-          done();
-        });
-    });
-
     it('should fail : invalid name', function(done) {
       request(url).put('/seller')
         .send({ seller: {
-          id: 'S01',
           adress: '1 camden road',
           mail: 'nick@gmail.com',
           phone: 0295652525
@@ -474,7 +456,6 @@ describe('Sellers tests', function() {
     it('should fail : invalid adress', function(done) {
       request(url).put('/seller')
         .send({ seller: {
-          id: 'S01',
           name: 'Nick',
           mail: 'nick@gmail.com',
           phone: 0295652525
@@ -491,7 +472,6 @@ describe('Sellers tests', function() {
     it('should fail : invalid email', function(done) {
       request(url).put('/seller')
         .send({ seller: {
-          id: 'S01',
           name: 'Nick',
           adress: '1 camden road',
           phone: 0295652525
@@ -508,7 +488,6 @@ describe('Sellers tests', function() {
     it('should fail : invalid number phone', function(done) {
       request(url).put('/seller')
         .send({ seller: {
-          id: 'S01',
           name: 'Nick',
           adress: '1 camden road',
           mail: 'nick@gmail.com'
@@ -525,7 +504,6 @@ describe('Sellers tests', function() {
     it('should create new seller', function(done) {
       request(url).put('/seller')
         .send({ seller: {
-          id: 'S01',
           name: 'Nick',
           adress: '1 camden road',
           mail: 'nick@gmail.com',
@@ -534,17 +512,17 @@ describe('Sellers tests', function() {
         .end(function(err, res) {
           assert.equal(res.status, 201)
           assert.equal(err, null);
+          uuidSeller = res.body.seller.id;
           assert.deepEqual(
             res.body.seller,
             {
-              id: 'S01',
+              id: uuidSeller,
               name: 'Nick',
               adress: '1 camden road',
               mail: 'nick@gmail.com',
               phone: 0295652525
             }
           );
-
           done();
         });
     });
@@ -563,21 +541,21 @@ describe('Sellers tests', function() {
             });
         });
     it('should return a seller', function(done) {
-          request(url).get('/seller/S01')
+          request(url).get('/seller/' + uuidSeller)
             .send()
             .end(function(err, res) {
               assert.equal(res.status, 200)
               assert.equal(err, null);
-               assert.deepEqual(
-              res.body.seller,
-              {
-                id: 'S01',
-                name: 'Nick',
-                adress: '1 camden road',
-                mail: 'nick@gmail.com',
-                phone: 0295652525
-              }
-            );
+              assert.deepEqual(
+                res.body.seller,
+                {
+                  id: uuidSeller,
+                  name: 'Nick',
+                  adress: '1 camden road',
+                  mail: 'nick@gmail.com',
+                  phone: 0295652525
+                }
+              );
               done();
             });
         });
@@ -585,9 +563,9 @@ describe('Sellers tests', function() {
 
   describe('POST:/seller/id',function(){
     it('should return a modified seller', function(done) {
-          request(url).post('/seller/S01')
+          request(url).post('/seller/' + uuidSeller)
             .send({ seller: {
-                  id: 'S01',
+                  id: uuidSeller,
                   name: 'Nick',
                   adress: '2 camden road',
                   mail: 'nick@gmail.com',
@@ -597,9 +575,9 @@ describe('Sellers tests', function() {
               assert.equal(res.status, 200)
               assert.equal(err, null);
               assert.deepEqual(
-              res.body.seller,
+                res.body.seller,
                 {
-                  id: 'S01',
+                  id: uuidSeller,
                   name: 'Nick',
                   adress: '2 camden road',
                   mail: 'nick@gmail.com',
@@ -613,7 +591,7 @@ describe('Sellers tests', function() {
      it('should fail : invalid id', function(done) {
           request(url).post('/seller/S02')
             .send({ seller: {
-                  id: 'S01',
+                  id: uuidSeller,
                   name: 'Nick',
                   adress: '1 camden road',
                   mail: 'nick@gmail.com',
@@ -630,14 +608,14 @@ describe('Sellers tests', function() {
 
   describe('DELETE:/seller/id',function(){
     it('should return ok for delete', function(done) {
-          request(url).delete('/seller/S01')
+          request(url).delete('/seller/' + uuidSeller)
             .send()
             .end(function(err, res) {
               assert.equal(res.status, 200)
               assert.equal(err, null);
               assert.deepEqual(res.body.seller,
                 {
-                  id: 'S01',
+                  id: uuidSeller,
                   name: 'Nick',
                   adress: '2 camden road',
                   mail: 'nick@gmail.com',

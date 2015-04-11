@@ -12,7 +12,9 @@
   "dependencies": {
     "baobab": "^0.4.3",
     "body-parser": "^1.12.2",
-    "express": "^4.12.3"
+    "express": "^4.12.3",
+    "flake-idgen": "~1.0.0",
+    "biguint-format": "~1.0.0"
   },
   "devDependencies": {
     "gulp": "^3.8.11",

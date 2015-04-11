@@ -3,6 +3,9 @@
 var model = require('./model.js'),
     cursor = model.select('sellers'),
     error = require('../utils/error.js'),
+    flakeIdGen = require('flake-idgen'),
+    generator = new flakeIdGen,
+    intformat = require('biguint-format'),
     callbacks = [];
 
 /**
@@ -28,7 +31,7 @@ module.exports = {
       return error(400, 'Missing seller.');
 
     if (typeof seller.id !== 'string')
-      return error(400, 'Invalid seller ID.');
+      return error(400, 'Invalid seller id.');
 
     if (typeof seller.name !== 'string')
       return error(400, 'Invalid seller name.');
@@ -51,6 +54,8 @@ module.exports = {
    */
   add: function(data, cb) {
     var err = false;
+
+    data.seller.id = intformat(generator.next(), 'hex', { prefix: '0x' });
 
     if (err = this.formatError(data.seller))
       cb(err, null);
