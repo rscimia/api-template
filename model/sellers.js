@@ -3,9 +3,7 @@
 var model = require('./model.js'),
     cursor = model.select('sellers'),
     error = require('../utils/error.js'),
-    flakeIdGen = require('flake-idgen'),
-    generator = new flakeIdGen,
-    intformat = require('biguint-format'),
+    uuid = require('node-uuid'),
     callbacks = [];
 
 /**
@@ -55,7 +53,7 @@ module.exports = {
   add: function(data, cb) {
     var err = false;
 
-    data.seller.id = intformat(generator.next(), 'hex', { prefix: '0x' });
+    data.seller.id = uuid.v1();
 
     if (err = this.formatError(data.seller))
       cb(err, null);
