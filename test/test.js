@@ -70,7 +70,7 @@ describe('Bills tests', function() {
     it('should fail : invalid id', function(done) {
       request(url).put('/bill')
         .send({ bill: {
-          seller: 'Computer Inc.',
+          seller: 'S01',
           amount: 524.95
         }})
         .end(function(err, res) {
@@ -97,11 +97,54 @@ describe('Bills tests', function() {
         });
     });
 
+    it('should fail : invalid seller', function(done) {
+      request(url).put('/bill')
+        .send({ bill: {
+          id: 'B01',
+          seller: 'S01',
+          amount: 524.95
+        }})
+        .end(function(err, res) {
+          assert.equal(res.status, 400)
+          assert.equal(err, null);
+          assert.deepEqual(res.body.error, 'Invalid bill seller.');
+
+          done();
+        });
+    });
+
+    it('should create new seller', function(done) {
+      request(url).put('/seller')
+        .send({ seller: {
+          id: 'S01',
+          name: 'Nick',
+          adress: '1 camden road',
+          mail: 'nick@gmail.com',
+          phone: 0295652525
+        }})
+        .end(function(err, res) {
+          assert.equal(res.status, 201)
+          assert.equal(err, null);
+          assert.deepEqual(
+            res.body.seller,
+            {
+              id: 'S01',
+              name: 'Nick',
+              adress: '1 camden road',
+              mail: 'nick@gmail.com',
+              phone: 0295652525
+            }
+          );
+
+          done();
+        });
+    });
+
     it('should fail : invalid amount', function(done) {
       request(url).put('/bill')
         .send({ bill: {
           id: 'B01',
-          seller: 'Computer Inc.'
+          seller: 'S01'
         }})
         .end(function(err, res) {
           assert.equal(res.status, 400)
@@ -116,7 +159,7 @@ describe('Bills tests', function() {
       request(url).put('/bill')
         .send({ bill: {
           id: 'B01',
-          seller: 'Computer Inc.',
+          seller: 'S01',
           amount: 524.95
         }})
         .end(function(err, res) {
@@ -126,7 +169,7 @@ describe('Bills tests', function() {
             res.body.bill,
             {
               id: 'B01',
-              seller: 'Computer Inc.',
+              seller: 'S01',
               amount: 524.95
             }
           );
@@ -158,7 +201,7 @@ describe('Bills tests', function() {
               res.body.bill,
               {
                 id: 'B01',
-                seller: 'Computer Inc.',
+                seller: 'S01',
                 amount: 524.95
               }
             );
@@ -172,7 +215,7 @@ describe('Bills tests', function() {
           request(url).post('/bill/B01')
             .send({ bill: {
                   id: 'B01',
-                  seller: 'Computer Inc.',
+                  seller: 'S01',
                   amount: 600.50
                 }})
             .end(function(err, res) {
@@ -182,7 +225,7 @@ describe('Bills tests', function() {
               res.body.bill,
                 {
                   id: 'B01',
-                  seller: 'Computer Inc.',
+                  seller: 'S01',
                   amount: 600.50
                 }
               );
@@ -193,7 +236,7 @@ describe('Bills tests', function() {
           request(url).post('/bill/B02')
             .send({ bill: {
                   id: 'B01',
-                  seller: 'Computer Inc.',
+                  seller: 'S01',
                   amount: 600.50
                 }})
             .end(function(err, res) {
@@ -216,7 +259,7 @@ describe('DELETE:/bill/id',function(){
               res.body.bill,
                 {
                   id: 'B01',
-                  seller: 'Computer Inc.',
+                  seller: 'S01',
                   amount: 600.50
                 }
               );
@@ -388,4 +431,231 @@ describe('DELETE:/product/id',function(){
         });
 });
 
+});
+
+describe('Sellers tests', function() {
+
+  describe('PUT:/seller', function() {
+
+    it('should fail : invalid id', function(done) {
+      request(url).put('/seller')
+        .send({ seller: {
+          name: 'Nick',
+          adress: '1 camden road',
+          mail: 'nick@gmail.com',
+          phone: 0295652525
+        }})
+        .end(function(err, res) {
+          assert.equal(res.status, 400)
+          assert.equal(err, null);
+          assert.deepEqual(res.body.error, 'Invalid seller ID.');
+
+          done();
+        });
+    });
+
+    it('should fail : invalid name', function(done) {
+      request(url).put('/seller')
+        .send({ seller: {
+          id: 'S01',
+          adress: '1 camden road',
+          mail: 'nick@gmail.com',
+          phone: 0295652525
+        }})
+        .end(function(err, res) {
+          assert.equal(res.status, 400)
+          assert.equal(err, null);
+          assert.deepEqual(res.body.error, 'Invalid seller name.');
+
+          done();
+        });
+    });
+
+    it('should fail : invalid adress', function(done) {
+      request(url).put('/seller')
+        .send({ seller: {
+          id: 'S01',
+          name: 'Nick',
+          mail: 'nick@gmail.com',
+          phone: 0295652525
+        }})
+        .end(function(err, res) {
+          assert.equal(res.status, 400)
+          assert.equal(err, null);
+          assert.deepEqual(res.body.error, 'Invalid seller adress.');
+
+          done();
+        });
+    });
+
+    it('should fail : invalid email', function(done) {
+      request(url).put('/seller')
+        .send({ seller: {
+          id: 'S01',
+          name: 'Nick',
+          adress: '1 camden road',
+          phone: 0295652525
+        }})
+        .end(function(err, res) {
+          assert.equal(res.status, 400)
+          assert.equal(err, null);
+          assert.deepEqual(res.body.error, 'Invalid seller email.');
+
+          done();
+        });
+    });
+
+    it('should fail : invalid number phone', function(done) {
+      request(url).put('/seller')
+        .send({ seller: {
+          id: 'S01',
+          name: 'Nick',
+          adress: '1 camden road',
+          mail: 'nick@gmail.com'
+        }})
+        .end(function(err, res) {
+          assert.equal(res.status, 400)
+          assert.equal(err, null);
+          assert.deepEqual(res.body.error, 'Invalid seller number phone.');
+
+          done();
+        });
+    });
+
+    it('should create new seller', function(done) {
+      request(url).put('/seller')
+        .send({ seller: {
+          id: 'S01',
+          name: 'Nick',
+          adress: '1 camden road',
+          mail: 'nick@gmail.com',
+          phone: 0295652525
+        }})
+        .end(function(err, res) {
+          assert.equal(res.status, 201)
+          assert.equal(err, null);
+          assert.deepEqual(
+            res.body.seller,
+            {
+              id: 'S01',
+              name: 'Nick',
+              adress: '1 camden road',
+              mail: 'nick@gmail.com',
+              phone: 0295652525
+            }
+          );
+
+          done();
+        });
+    });
+
+  });
+
+  describe('GET:/seller/id',function(){
+    it('should fail : invalid id', function(done) {
+          request(url).get('/seller/S02')
+            .send()
+            .end(function(err, res) {
+              assert.equal(res.status, 404)
+              assert.equal(err, null);
+              assert.deepEqual(res.body.error, 'Seller not found.');
+              done();
+            });
+        });
+    it('should return a seller', function(done) {
+          request(url).get('/seller/S01')
+            .send()
+            .end(function(err, res) {
+              assert.equal(res.status, 200)
+              assert.equal(err, null);
+               assert.deepEqual(
+              res.body.seller,
+              {
+                id: 'S01',
+                name: 'Nick',
+                adress: '1 camden road',
+                mail: 'nick@gmail.com',
+                phone: 0295652525
+              }
+            );
+              done();
+            });
+        });
+  });
+
+  describe('POST:/seller/id',function(){
+    it('should return a modified seller', function(done) {
+          request(url).post('/seller/S01')
+            .send({ seller: {
+                  id: 'S01',
+                  name: 'Nick',
+                  adress: '2 camden road',
+                  mail: 'nick@gmail.com',
+                  phone: 0295652525
+                }})
+            .end(function(err, res) {
+              assert.equal(res.status, 200)
+              assert.equal(err, null);
+              assert.deepEqual(
+              res.body.seller,
+                {
+                  id: 'S01',
+                  name: 'Nick',
+                  adress: '2 camden road',
+                  mail: 'nick@gmail.com',
+                  phone: 0295652525
+                }
+              );
+              done();
+            });
+        });
+
+     it('should fail : invalid id', function(done) {
+          request(url).post('/seller/S02')
+            .send({ seller: {
+                  id: 'S01',
+                  name: 'Nick',
+                  adress: '1 camden road',
+                  mail: 'nick@gmail.com',
+                  phone: 0295652525
+                }})
+            .end(function(err, res) {
+              assert.equal(res.status, 404)
+              assert.equal(err, null);
+              assert.deepEqual(res.body.error, 'Seller not found.');
+              done();
+            });
+        });
+  });
+
+  describe('DELETE:/seller/id',function(){
+    it('should return ok for delete', function(done) {
+          request(url).delete('/seller/S01')
+            .send()
+            .end(function(err, res) {
+              assert.equal(res.status, 200)
+              assert.equal(err, null);
+              assert.deepEqual(res.body.seller,
+                {
+                  id: 'S01',
+                  name: 'Nick',
+                  adress: '2 camden road',
+                  mail: 'nick@gmail.com',
+                  phone: 0295652525
+                }
+              );
+              done();
+            });
+        });
+    it('should fail : invalid id', function(done) {
+          request(url).delete('/seller/B01')
+            .send()
+            .end(function(err, res) {
+              assert.equal(res.status, 404)
+              assert.equal(err, null);
+              assert.deepEqual(res.body.error, 'Seller not found.');
+              done();
+            });
+        });
+  });
 });

@@ -1,7 +1,8 @@
 'use strict';
 
 var billController = require('../controller/bills.js'),
-    productController = require('../controller/products.js');
+    productController = require('../controller/products.js'),
+    sellerController = require('../controller/sellers.js');
 
 function makeRoute(app, info) {
   app[info.method](
@@ -19,4 +20,8 @@ module.exports = function(app) {
   makeRoute(app, productController.update);
   makeRoute(app, productController.read);
   makeRoute(app, productController.delete);
+  makeRoute(app, sellerController.create);
+  makeRoute(app, sellerController.update);
+  makeRoute(app, sellerController.read);
+  makeRoute(app, sellerController.delete);
 };

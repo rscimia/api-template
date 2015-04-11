@@ -5,7 +5,8 @@ var  server = require('../server.js'),
     // data default format
     dataTemplate = {
         bills: [],
-        products: []
+        products: [],
+        sellers: []
     },
 
     // initialize data object.

@@ -45,6 +45,9 @@ module.exports = {
     if (typeof bill.seller !== 'string')
       return error(400, 'Invalid bill seller.');
 
+    if(!model.select('sellers').select({id:bill.seller}).get())
+      return error(400, 'Invalid bill seller.');
+
     if (typeof bill.amount !== 'number')
       return error(400, 'Invalid bill amount.');
 
